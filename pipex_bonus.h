@@ -55,6 +55,7 @@ wanted '"
 # define ERROR_TMP_FILE	"pipex: here_doc: temporary file corrupted\n"
 # define ERROR_NO_CMD	"pipex: permission denied: ''\n"
 # define ERROR_WAIT	"pipex: wait: failed to wait for child process\n"
+# define ERROR_WRNG_CMD	": command not found\n"
 
 // Error codes macros for exit()
 # define ERRC_ARGS	1

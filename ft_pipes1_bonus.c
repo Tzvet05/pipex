@@ -47,11 +47,11 @@ static short	ft_start_processes(char ***cmds, int *pipes, pid_t *pids,
 	while (cmds[i])
 	{
 		pids[i] = -1;
+		error = ft_open_of(cmds[i + 1], args.argv, ft_get_of(args.argv));
+		if (error)
+			return (error);
 		if (cmds[i][0] && cmds[i][0][0])
 		{
-			error = ft_open_of(cmds[i + 1], args.argv, ft_get_of(args.argv));
-			if (error)
-				return (error);
 			pids[i] = fork();
 			if (pids[i] == -1)
 			{

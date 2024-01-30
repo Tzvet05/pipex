@@ -54,9 +54,9 @@ static char	*ft_no_cmd(char **cmd_options, short file_exists)
 	}
 	else
 	{
-		ft_puterr(ERROR_FOK);
+		ft_puterr("pipex: ");
 		ft_puterr(cmd_options[0]);
-		ft_puterr("\n");
+		ft_puterr(ERROR_WRNG_CMD);
 	}
 	while (cmd_options[i])
 	{

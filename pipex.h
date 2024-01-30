@@ -32,7 +32,7 @@
 
 // Error strings macros for ft_puterr()
 # define ERROR_MALLOC	"pipex: malloc: failed memory allocation\n"
-# define ERROR_FOK	"pipex: no such file or directory: "
+# define ERROR_FOK	"pipex: no such file or directory :"
 # define ERROR_XOK	"pipex: permission denied: "
 # define ERROR_QUOTES	"pipex: unclosed quotes\n"
 # define ERROR_ARGS	"pipex: 4 arguments minimum\n"
@@ -44,6 +44,7 @@
 # define ERROR_NB_PIPES	"pipex: cannot pipe more than 2 commands\n"
 # define ERROR_NO_CMD	"pipex: permission denied: ''\n"
 # define ERROR_WAIT	"pipex: wait: failed to wait for child process\n"
+# define ERROR_WRNG_CMD	": command not found\n"
 
 // Error codes macros for exit()
 # define ERRC_ARGS	1
