@@ -25,6 +25,10 @@ static void	ft_child(char ***cmds, int *pipes, size_t i, char **envp)
 	ft_close_pipes(pipes);
 	execve(cmds[i][0], cmds[i], envp);
 	ft_free_arr_arr((void ***)cmds);
+	free(pipes);
+	close(0);
+	close(1);
+	close(2);
 	ft_puterr(ERROR_EXEC);
 	exit(ERRC_EXEC);
 }
@@ -54,12 +58,12 @@ static short	ft_start_processes(char ***cmds, int *pipes, pid_t *pids,
 		{
 			pids[i] = fork();
 			if (pids[i] == -1)
-			{
-				ft_puterr(ERROR_FORK);
-				return (ERRC_FORK);
-			}
+				return (ERRC_FORK + (0 & ft_puterr(ERROR_FORK)));
 			if (!pids[i])
+			{
+				free(pids);
 				ft_child(cmds, pipes, i, args.envp);
+			}
 		}
 		ft_close_pipe(i, pipes, ft_count_cmds(cmds));
 		i++;
@@ -67,48 +71,59 @@ static short	ft_start_processes(char ***cmds, int *pipes, pid_t *pids,
 	return (0);
 }
 
-static short	ft_wait_pids(pid_t *pids, char ***cmds)
+static short	ft_wait_pids(short error, pid_t *pids, int *pipes, char ***cmds)
 {
 	size_t	i;
 
+	free(pipes);
+	if (error)
+	{
+		free(pids);
+		ft_close_pipes_std(pipes);
+		return (error);
+	}
 	i = 0;
 	while (cmds[i])
 	{
 		if (pids[i] != -1 && waitpid(pids[i], 0, 0) == -1)
 		{
 			ft_puterr(ERROR_WAIT);
+			free(pids);
 			return (ERRC_WAIT);
 		}
 		i++;
 	}
+	close(0);
+	close(1);
+	close(2);
+	free(pids);
 	return (0);
 }
 
 short	ft_start_pipes(char ***cmds, char *infile, char **argv, char **envp)
 {
-	pid_t	pids[510];
-	int		pipes[1021];
+	pid_t	*pids;
+	int		*pipes;
 	short	error;
 	short	start;
 	t_args	args;
 
-	if (ft_open_pipes(cmds, pipes))
+	args = ft_init_vars(argv, envp, &pids, &pipes);
+	if (!args.argv)
+		return (ERRC_MALLOC);
+	if (ft_open_pipes(cmds, pipes, pids))
 		return (ERRC_PIPE);
 	error = ft_open_infile(infile, pipes, &start);
 	if (error)
 	{
+		free(pids);
+		free(pipes);
 		ft_close_pipes(pipes);
 		return (error);
 	}
-	ft_init_args(&args, argv, envp);
 	error = ft_start_processes(&cmds[start], &pipes[2 * start], pids, args);
-	if (error)
-	{
-		ft_close_pipes(pipes);
-		return (error);
-	}
 	close(pipes[(ft_count_cmds(cmds) - 1) * 2]);
 	close(pipes[(ft_count_cmds(cmds) - 1) * 2 + 1]);
-	ft_wait_pids(pids, &cmds[start]);
-	return (0);
+	error = ft_wait_pids(error, pids, pipes, &cmds[start]);
+	return (error);
 }

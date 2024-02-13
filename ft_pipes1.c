@@ -25,6 +25,9 @@ static void	ft_child(char ***cmds, int *pipes, size_t i, char **envp)
 	ft_close_pipes(pipes);
 	execve(cmds[i][0], cmds[i], envp);
 	ft_free_arr_arr((void ***)cmds);
+	close(0);
+	close(1);
+	close(2);
 	ft_puterr(ERROR_EXEC);
 	exit(ERRC_EXEC);
 }
@@ -81,6 +84,9 @@ static short	ft_wait_pids(pid_t *pids, char ***cmds)
 		}
 		i++;
 	}
+	close(0);
+	close(1);
+	close(2);
 	return (0);
 }
 
@@ -104,7 +110,7 @@ short	ft_start_pipes(char ***cmds, char *infile, char **argv, char **envp)
 	error = ft_start_processes(&cmds[start], &pipes[2 * start], pids, args);
 	if (error)
 	{
-		ft_close_pipes(pipes);
+		ft_close_pipes_std(pipes);
 		return (error);
 	}
 	close(pipes[(ft_count_cmds(cmds) - 1) * 2]);

@@ -118,12 +118,13 @@ short	ft_start_pipes(char ***cmds, char *filename, char **argv, char **envp);
 // ft_pipes2_bonus.c
 short	ft_open_of(char **cmd, char **argv, char *outfile);
 size_t	ft_count_cmds(char ***cmds);
-short	ft_open_pipes(char ***cmds, int *pipes);
+short	ft_open_pipes(char ***cmds, int *pipes, pid_t *pids);
 short	ft_open_infile(char *filename, int *pipes, short *start);
 
 // ft_pipes3_bonus.c
 void	ft_close_pipes(int *pipes);
+void	ft_close_pipes_std(int *pipes);
 char	*ft_get_of(char **argv);
-void	ft_init_args(t_args *args, char **argv, char **envp);
+t_args	ft_init_vars(char **argv, char **envp, pid_t **pids, int **pipes);
 
 #endif

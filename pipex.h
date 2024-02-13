@@ -101,6 +101,7 @@ short	ft_open_infile(char *filename, int *pipes, short *start);
 
 // ft_pipes3.c
 void	ft_close_pipes(int *pipes);
+void	ft_close_pipes_std(int *pipes);
 char	*ft_get_of(char **argv);
 void	ft_init_args(t_args *args, char **argv, char **envp);
 

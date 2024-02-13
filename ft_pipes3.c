@@ -24,6 +24,21 @@ void	ft_close_pipes(int *pipes)
 	}
 }
 
+void	ft_close_pipes_std(int *pipes)
+{
+	size_t	i;
+
+	i = 0;
+	while (pipes[i] != -1)
+	{
+		close(pipes[i]);
+		i++;
+	}
+	close(0);
+	close(1);
+	close(2);
+}
+
 char	*ft_get_of(char **argv)
 {
 	size_t	i;

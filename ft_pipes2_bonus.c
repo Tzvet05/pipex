@@ -12,7 +12,7 @@
 
 #include "pipex_bonus.h"
 
-short	ft_open_pipes(char ***cmds, int *pipes)
+short	ft_open_pipes(char ***cmds, int *pipes, pid_t *pids)
 {
 	size_t	i_pipe;
 	size_t	i_cmd;
@@ -26,6 +26,8 @@ short	ft_open_pipes(char ***cmds, int *pipes)
 			pipes[i_pipe] = -1;
 			ft_close_pipes(pipes);
 			ft_puterr(ERROR_PIPE);
+			free(pipes);
+			free(pids);
 			return (1);
 		}
 		i_pipe += 2;
