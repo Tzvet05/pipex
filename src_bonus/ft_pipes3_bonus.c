@@ -34,6 +34,7 @@ void	ft_close_pipes_std(int *pipes)
 		close(pipes[i]);
 		i++;
 	}
+	free(pipes);
 	close(0);
 	close(1);
 	close(2);

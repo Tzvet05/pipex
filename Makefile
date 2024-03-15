@@ -10,17 +10,28 @@
 #                                                                              #
 # **************************************************************************** #
 
+# Make parameters
+
 NAME = pipex
 
-CC = cc
+COMPILER = cc
 
 CFLAG = -Wall -Wextra -Werror
 
-HEADER = ./pipex.h
+LIB = libft.a
 
-HEADER_BONUS = ./pipex_bonus.h
+# Directories
 
-SRC = ft_check_params.c \
+LIB_DIR =	libft/
+HDR_DIR =	hdr/
+SRC_DIR =	src/
+OBJ_DIR =	obj/
+SRC_BONUS_DIR =	src_bonus/
+OBJ_BONUS_DIR =	obj_bonus/
+
+# Source code (mandatory)
+
+SRC =	ft_check_params.c \
 	ft_utils.c \
 	ft_pipes1.c \
 	ft_pipes2.c \
@@ -31,47 +42,71 @@ SRC = ft_check_params.c \
 	ft_paths2.c \
 	pipex.c
 
-SRC_BONUS = ft_check_params_bonus.c \
-	ft_utils_bonus.c \
-	ft_here_doc_bonus.c \
-	ft_file_gen_bonus.c \
-	ft_pipes1_bonus.c \
-	ft_pipes2_bonus.c \
-	ft_pipes3_bonus.c \
-	ft_cmds1_bonus.c \
-	ft_cmds2_bonus.c \
-	ft_paths1_bonus.c \
-	ft_paths2_bonus.c \
-	pipex_bonus.c
+# Source code (bonus)
 
-OBJ = $(SRC:.c=.o)
+SRC_BONUS =	ft_check_params_bonus.c \
+		ft_utils_bonus.c \
+		ft_here_doc_bonus.c \
+		ft_file_gen_bonus.c \
+		ft_pipes1_bonus.c \
+		ft_pipes2_bonus.c \
+		ft_pipes3_bonus.c \
+		ft_cmds1_bonus.c \
+		ft_cmds2_bonus.c \
+		ft_paths1_bonus.c \
+		ft_paths2_bonus.c \
+		pipex_bonus.c
 
-OBJ_BONUS = $(SRC_BONUS:.c=.o)
+# Compiled objects (mandatory)
+
+OBJ = $(addprefix $(OBJ_DIR), $(SRC:.c=.o))
+
+# Compiled objects (bonus)
+
+OBJ_BONUS = $(addprefix $(OBJ_BONUS_DIR), $(SRC_BONUS:.c=.o))
+
+# Compilation (mandatory)
+
+$(NAME) : $(LIB) $(OBJ)
+	@ echo "$(NAME) compiled (mandatory)."
+	@ $(COMPILER) $(CFLAG) $(OBJ) $(LIB) -o $(NAME)
+
+$(OBJ_DIR)%.o : $(SRC_DIR)%.c | $(OBJ_DIR)
+	@ $(COMPILER) $(CFLAG) -I $(HDR_DIR) -c $^ -o $@
+
+# Compilation (bonus)
+
+bonus : $(LIB) $(OBJ_BONUS)
+	@ echo "$(NAME) compiled (bonus)."
+	@ $(COMPILER) $(CFLAG) $(OBJ_BONUS) $(LIB) -o $(NAME)
+
+$(OBJ_BONUS_DIR)%.o : $(SRC_BONUS_DIR)%.c | $(OBJ_BONUS_DIR)
+	@ $(COMPILER) $(CFLAG) -I $(HDR_DIR) -c $^ -o $@
+
+# Objects directories
+
+$(OBJ_DIR) $(OBJ_BONUS_DIR) :
+	@ mkdir -p $@
+
+# Library
+
+$(LIB) :
+	@ make -s -C $(LIB_DIR)
+	@ mv $(LIB_DIR)$(LIB) .
+
+# Rules
 
 all : $(NAME)
 
-$(NAME) : libft.a $(OBJ)
-	$(CC) $(CFLAG) $(OBJ) libft.a -o $(NAME)
-
-bonus : libft.a $(OBJ_BONUS)
-	$(CC) $(CFLAG) $(OBJ_BONUS) libft.a -o $(NAME)
-
-%.o : %.c
-	$(CC) $(CFLAG) -c $^ -o $@
-
-libft.a :
-	make -C libft/
-	mv libft/libft.a ./
-
 fclean : clean
-	make fclean -C libft/
-	rm -f $(NAME)
+	@ make fclean -s -C $(LIB_DIR)
+	@ rm -f $(NAME) $(NAME_BONUS)
 
 clean :
-	make clean -C libft/
-	rm -f $(OBJ) $(OBJ_BONUS)
-	rm -f libft.a
+	@ make clean -s -C $(LIB_DIR)
+	@ rm -rf $(OBJ_DIR) $(OBJ_BONUS_DIR)
+	@ rm -f $(LIB)
 
-re :	fclean all
+re : fclean all
 
 .PHONY : all fclean clean re bonus

@@ -75,6 +75,7 @@ static short	ft_read_stdin(char *buffer_write, char *buffer, int *nbr_read,
 	}
 	if (!*nbr_read && !buffer_write)
 	{
+		ft_puterr("\n");
 		ft_puterr(WARN_LIMITER);
 		ft_puterr(limiter);
 		ft_puterr("')\n");

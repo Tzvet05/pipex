@@ -75,13 +75,13 @@ static short	ft_wait_pids(short error, pid_t *pids, int *pipes, char ***cmds)
 {
 	size_t	i;
 
-	free(pipes);
 	if (error)
 	{
 		free(pids);
 		ft_close_pipes_std(pipes);
 		return (error);
 	}
+	free(pipes);
 	i = 0;
 	while (cmds[i])
 	{
